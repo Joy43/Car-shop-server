@@ -3,7 +3,8 @@
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendRequest";
 import { userService } from "./user.service";
-import status from "http-status";
+import httpStatus from 'http-status';
+
 
 
 const createUser = catchAsync(
@@ -16,7 +17,7 @@ const createUser = catchAsync(
      
   
       sendResponse(res, {
-        statusCode: status.OK,
+        statusCode: httpStatus.OK,
         success: true,
         message: 'user is created succesfully',
         data: result,
@@ -28,7 +29,7 @@ const createUser = catchAsync(
     const result = await userService.getUser()
   
     sendResponse(res,{
-        statusCode: status.OK,
+        statusCode: httpStatus.OK,
         success:true,
       message: 'Users getting successfully',
       data: result,
@@ -43,7 +44,7 @@ const createUser = catchAsync(
   
     sendResponse(res, {
       statusCode: 
-     status.OK,
+      httpStatus.OK,
       success:true,
       message: 'User getting successfully',
       data: result,
@@ -56,7 +57,7 @@ const createUser = catchAsync(
     const result = await userService.updateUser(userId, body)
   
     sendResponse(res, {
-      statusCode: status.OK,
+      statusCode: httpStatus.OK,
       success:true,
       message: 'User updated successfully',
       data: result,
@@ -68,7 +69,7 @@ const createUser = catchAsync(
     await userService.deleteUser(userId)
   
     sendResponse(res, {
-      statusCode: status.OK,
+      statusCode: httpStatus.OK,
       success:true,
       message: 'user deleted successfully',
       data: {},

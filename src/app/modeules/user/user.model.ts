@@ -1,8 +1,9 @@
 import mongoose, { model, Schema } from "mongoose";
 
 import config from "../../config";
-import bcrypt from 'bcrypt';
+
 import { TUser } from "./user.interface";
+import bcrypt from 'bcrypt';
 
 
 // -----------user schema--------------

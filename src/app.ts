@@ -1,31 +1,32 @@
-import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import express, { Application, Request, Response } from 'express';
 
-const app: Application = express();
+import router from './app/routes';
 
-// Middleware
+
+
+
+const app:Application=express()
+// parsers api
 app.use(express.json());
-app.use(cors()); // Uncomment this line if you need CORS support
+app.use(cors());
+// -----api end point--------
+app.use('/api', router);
 
-// Example API routes
-app.use('/api', (req: Request, res: Response) => {
-  res.send({ message: 'This is the /api endpoint' });
-});
 
-// Root API endpoint
-app.get('/', (req: Request, res: Response) => {
+// -----root api endpoint------
+app.get('/', (req:Request,res: Response) => {
   res.send({
     status: true,
     message: 'blog_post Server is running successfully 🏃🏽‍♂️➡️',
   });
 });
 
-// Middleware to handle 404 errors
-app.use('*', (req: Request, res: Response) => {
+app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
     status: false,
-    message: 'Resource not found',
-  });
-});
+    message: 'Route not found'
+  })
+})
 
 export default app;
