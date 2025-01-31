@@ -1,9 +1,18 @@
 import { Router } from "express";
+import { userRouter } from "../modeules/user/user.route";
+import { authRoute } from "../modeules/auth/auth.router";
 
 const router=Router();
-const moduleRoutes: any[]= [
+const moduleRoutes= [
  
-    
+    {
+        path:'/user',
+        route:userRouter
+    }, 
+    {
+        path:'/auth',
+        route:authRoute
+    },
     
 
 ]

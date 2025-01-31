@@ -6,22 +6,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
-// parsers api
+// Middleware
 app.use(express_1.default.json());
-app.use((0, cors_1.default)());
-// -----api end point--------
-app.use('/api');
-// -----root api endpoint------
+app.use((0, cors_1.default)()); // Uncomment this line if you need CORS support
+// Example API routes
+app.use('/api', (req, res) => {
+    res.send({ message: 'This is the /api endpoint' });
+});
+// Root API endpoint
 app.get('/', (req, res) => {
     res.send({
         status: true,
         message: 'blog_post Server is running successfully 🏃🏽‍♂️➡️',
     });
 });
-app.use("*", (req, res) => {
+// Middleware to handle 404 errors
+app.use('*', (req, res) => {
     res.status(404).json({
         status: false,
-        message: 'Route not found'
+        message: 'Resource not found',
     });
 });
 exports.default = app;
