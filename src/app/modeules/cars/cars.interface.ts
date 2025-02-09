@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 export type Tcars={
     brand :string,
@@ -9,6 +9,7 @@ export type Tcars={
     description:string,
     quantity:number,
     inStock:boolean,
+    author:mongoose.Schema.Types.ObjectId
 
 }
 export interface carsModel extends Model <Tcars>{

@@ -6,7 +6,7 @@ const createCarValidationSchema = z.object({
       required_error: "Brand name is required.",
       invalid_type_error: "Brand name must be a string.",
     }).max(50, "Brand name cannot exceed 50 characters."),
-    
+
     model: z.string({
       required_error: "Model name is required.",
       invalid_type_error: "Model must be a string.",
@@ -44,13 +44,19 @@ const createCarValidationSchema = z.object({
 });
 
 const updateCarsValidationSchema = z.object({
-    body: z.object({
-       brand: z.string().optional(),
-        model: z.string().optional(),
-    }),
+  body: z.object({
+    brand: z.string().max(50, "Brand name cannot exceed 50 characters.").optional(),
+    model: z.string().optional(),
+    year: z.number().min(1886, "The year must be 1886 or later.").optional(),
+    price: z.number().min(0, "Price cannot be negative.").optional(),
+    category: z.enum(["Sedan", "SUV", "Truck", "Coupe", "Convertible"]).optional(),
+    description: z.string().max(500, "Description cannot exceed 500 characters.").optional(),
+    quantity: z.number().min(0, "Quantity cannot be negative.").optional(),
+    inStock: z.boolean().optional(),
+  }),
 });
-export  const carsValidation ={
-    createCarValidationSchema,
-    
- updateCarsValidationSchema
-}
+
+export const carsValidation = {
+  createCarValidationSchema,
+  updateCarsValidationSchema,
+};
