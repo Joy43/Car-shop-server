@@ -4,6 +4,8 @@ import catchAsync from "../utils/catchAsync";
 import { AuthService } from "./auth.service";
 import sendResponse from "../utils/sendRequest";
 import status from "http-status";
+import { config } from "process";
+import httpStatus from 'http-status';
 // ----------register---------------
 const register=async(req:Request,res:Response)=>{
  const result =await AuthService.register(req.body);
@@ -33,7 +35,9 @@ const login=catchAsync(async(req:Request,res:Response)=>{
             
         },
     })
-})
+});
+
+
 export const AuthController={
     register,login
 }
