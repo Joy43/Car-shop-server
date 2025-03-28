@@ -6,6 +6,7 @@ export type Tcars={
     year:number,
     price:number,
     category:'Sedan' | 'SUV' | 'Truck' | 'Coupe' | 'Convertible'|'BMW'|'Tesla Cybertruck';
+    imageUrls: string[];
     description:string,
     quantity:number,
     inStock:boolean,

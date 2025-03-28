@@ -29,6 +29,10 @@ const carStoreSchema = new Schema<Tcars>(
       enum: ["Sedan", "SUV", "Truck", "Coupe", "Convertible"],
       required: [true, " Please specify a valid category."],
     },
+    imageUrls: {
+      type: [String],
+      required: [true, 'Product images are required'],
+   },
     description: {
       type: String,
       required: [true, " Please provide a description (maximum 500 characters)."],

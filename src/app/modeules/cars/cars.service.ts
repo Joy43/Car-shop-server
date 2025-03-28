@@ -1,17 +1,31 @@
 import { Tcars } from "./cars.interface";
 import Car from "./cars.model";
+import { IImageFiles } from '../../interface/IImageFile';
+import { IJwtPayload } from "../auth/auth.interface";
+import AppError from "../error/AppError";
+import { StatusCodes } from "http-status-codes";
 
-
-type AutherType={
-    _id:string;
-    name:string;
-    email:string;
-    status?:string
+const createCars=async(
+    productData: Partial<Tcars>,
+    productImages: IImageFiles,
+    authUser: IJwtPayload
+)=>{
+  
+const {images}=productImages;
+if(!images || images.length ===0){
+    throw new AppError(
+        StatusCodes.BAD_GATEWAY,
+        'cars image is required'
+    );
 }
-const createCars=async(payload:Tcars)=>{
-    const car=await Car.create(payload)
-    return Car.findById(car._id).populate('author')
+productData.imageUrls = images.map((image) => image.path);
+
+const result={ ...productData, authUser }
+return result;
+
 };
+
+
 export const carService={
-    createCars
+    createCars,
 }
