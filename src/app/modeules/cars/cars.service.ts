@@ -6,6 +6,12 @@ import AppError from "../error/AppError";
 import { StatusCodes } from "http-status-codes";
 import status from "http-status";
 import { carController } from "./cars.controller";
+import { query } from "express";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { carSearchableFields } from "./cars.constant";
+
+// Define carsearchableField with appropriate fields
+
 
 // --------------create car product -----------------
 const createCars=async(
@@ -31,18 +37,36 @@ return result;
 
 };
 
+// ------get all cars-----------
+
+const getAllCars=async(query:Record<string,unknown>)=>{
+  const carsQuery=new QueryBuilder(Car.find(),query)
+  
+  .search(carSearchableFields)
+  .filter()
+  .sort()
+  .paginate()
+  .fields();
+  
+  const meta=await carsQuery.countTotal();
+  const result=await carsQuery.modelQuery;
+  return{meta,result}
+};
+
 // ----------get single product--------------
-const getSinglecarProduct=async(productId:string)=>{
-    const car=await Car.findById(productId);
-   if(!car){
-    throw new AppError(status.NOT_FOUND,'car product not found')
-   } 
-const carobj=car.toObject
-   return{
-    ...carobj
-   } 
-}
+const getSinglecarProduct = async (productId: string) => {
+    const car = await Car.findById(productId);
+    if (!car) {
+        throw new AppError(StatusCodes.NOT_FOUND, "Car product not found");
+    }
+    const carObj = car.toObject(); 
+    return {
+        ...carObj
+    };
+};
 
 export const carService={
-    createCars,getSinglecarProduct
+    createCars,
+    getSinglecarProduct,
+    getAllCars
 }

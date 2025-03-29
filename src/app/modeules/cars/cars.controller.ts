@@ -5,6 +5,7 @@ import { carService } from "./cars.service";
 import { IJwtPayload } from "../auth/auth.interface";
 import { IImageFiles } from "../../interface/IImageFile";
 import { StatusCodes } from "http-status-codes";
+import status from "http-status";
 
 
 const createCars = catchAsync(async (req, res) => {
@@ -27,19 +28,35 @@ const createCars = catchAsync(async (req, res) => {
     return;
   });
 
+  // -----------------get all car product-------------
+  const getAllCars=catchAsync(async(req,res)=>{
+    const result=await carService.getAllCars(req.query);
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'Bicycles retrieved successfully',
+      data: result.result,
+    })
+  })
 
   // ---------get single product -----------
 
-  const getSiglecarProduct=catchAsync(async(req,res)=>{
-    const {productId}=req.params;
-    const result=await carService.getSinglecarProduct(productId);
-    sendResponse(res,{
-      statusCode:StatusCodes.OK,
-      success: true,
-      message: " car Product retrieved successfully",
-      data: result,
-    })
-  })
+  const getSiglecarProduct = catchAsync(async (req, res) => {
+    const { productId } = req.params;
+    // console.log(" car with ID:", productId);
+
+    const result = await carService.getSinglecarProduct(productId);
+    console.log("Result from service:", result);
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Car product retrieved successfully",
+        data: result,
+    });
+});
   export const carController={
-    createCars,getSiglecarProduct
+    createCars,
+    getSiglecarProduct,
+    getAllCars
   }
