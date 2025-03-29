@@ -4,6 +4,7 @@ import sendResponse from "../utils/sendRequest";
 import { carService } from "./cars.service";
 import { IJwtPayload } from "../auth/auth.interface";
 import { IImageFiles } from "../../interface/IImageFile";
+import { StatusCodes } from "http-status-codes";
 
 
 const createCars = catchAsync(async (req, res) => {
@@ -15,7 +16,7 @@ const createCars = catchAsync(async (req, res) => {
       req.user as IJwtPayload
       
       );
-    
+    console.log(result);
   
     sendResponse(res, {
       statusCode: 201,
@@ -26,6 +27,19 @@ const createCars = catchAsync(async (req, res) => {
     return;
   });
 
+
+  // ---------get single product -----------
+
+  const getSiglecarProduct=catchAsync(async(req,res)=>{
+    const {productId}=req.params;
+    const result=await carService.getSinglecarProduct(productId);
+    sendResponse(res,{
+      statusCode:StatusCodes.OK,
+      success: true,
+      message: " car Product retrieved successfully",
+      data: result,
+    })
+  })
   export const carController={
-    createCars
+    createCars,getSiglecarProduct
   }

@@ -47,7 +47,7 @@ const carStoreSchema = new Schema<Tcars>(
       type: Boolean,
       required: [true, "Please specify if the product is in stock."],
     },
-    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    // author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     timestamps: true,

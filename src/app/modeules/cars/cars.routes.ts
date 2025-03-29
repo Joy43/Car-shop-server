@@ -9,10 +9,20 @@ import { parseBody } from "../middlewates/bodyParse";
 
 
 const router=Router()
+// --------create car product-----------
 router.post('/',auth(USER_ROLE.admin),
 multerUpload.fields([{name:'images'}]),
 parseBody,
-
 validateRequest(carsValidation.createCarValidationSchema),carController.createCars);
 
+
+// ----------update product car-------------
+router.patch(
+    
+    '/:productId',
+
+);
+// ------get single car product --------------
+
+router.get('/:productId',carController.getSiglecarProduct);
 export const carsRouter=router;

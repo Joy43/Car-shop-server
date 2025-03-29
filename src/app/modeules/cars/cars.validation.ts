@@ -43,6 +43,7 @@ const createCarValidationSchema = z.object({
   }),
 });
 
+// -------------update product---------------
 const updateCarsValidationSchema = z.object({
   body: z.object({
     brand: z.string().max(50, "Brand name cannot exceed 50 characters.").optional(),

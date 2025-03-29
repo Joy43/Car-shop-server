@@ -22,7 +22,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new Error('Invalid token!');
     }
 
-    const { role, email } = decoded as JwtPayload;
+    const { role, email,name } = decoded as JwtPayload;
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error('This user is not found!');
