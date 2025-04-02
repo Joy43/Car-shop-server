@@ -1,44 +1,53 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { TUserRole } from '../user/user.interface';
+import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
+
 import catchAsync from '../utils/catchAsync';
+import { StatusCodes } from 'http-status-codes';
+import { USER_ROLE } from '../user/user.contant';
+import AppError from '../error/AppError';
+
 import User from '../user/user.model';
-const auth = (...requiredRoles: TUserRole[]) => {
-  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      throw new Error('You are not authorized!');
-    }
+import config from '../../config';
 
-    const token = authHeader.split(' ')[1];
-    if (!token) {
-      throw new Error('Token missing!');
-    }
+const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
+   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+      const token = req.headers.authorization?.split(' ')[1];
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, "secret");
-    } catch (error) {
-      throw new Error('Invalid token!');
-    }
+      if (!token) {
+         throw new AppError(StatusCodes.UNAUTHORIZED, 'Token not found!');
+      }
 
-    const { role, email,name } = decoded as JwtPayload;
-    const user = await User.findOne({ email });
-    if (!user) {
-      throw new Error('This user is not found!');
-    }
+      try {
+         // Verify token
+         const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
+         console.log(decoded);
+         if (!decoded || !decoded.userId) {
+            throw new AppError(StatusCodes.UNAUTHORIZED, 'Invalid token!');
+         }
 
-    if (user.status === 'blocked') {
-      throw new Error('This user is blocked!');
-    }
+         // Extract user details from token
+         const { role, email, userId } = decoded;
 
-    if (requiredRoles.length && !requiredRoles.includes(role)) {
-      throw new Error('You are not authorized!');
-    }
+         // Find user by ID (DO NOT USE `iat`)
+         const user = await User.findOne({ _id: userId, email, role });
 
-    req.user = decoded as JwtPayload;
-    next();
-  });
+         if (!user) {
+            throw new AppError(StatusCodes.NOT_FOUND, 'User not found!');
+         }
+
+         if (requiredRoles.length && !requiredRoles.includes(role)) {
+            throw new AppError(StatusCodes.FORBIDDEN, 'You are not authorized!');
+         }
+
+         req.user = user; // Attach user to request for further use
+         next();
+      } catch (error) {
+         if (error instanceof TokenExpiredError) {
+            return next(new AppError(StatusCodes.UNAUTHORIZED, 'Token has expired! Please login again.'));
+         }
+         return next(new AppError(StatusCodes.UNAUTHORIZED, 'Invalid token!'));
+      }
+   });
 };
 
 export default auth;

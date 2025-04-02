@@ -6,6 +6,7 @@ import { IJwtPayload } from "../auth/auth.interface";
 import { IImageFiles } from "../../interface/IImageFile";
 import { StatusCodes } from "http-status-codes";
 import status from "http-status";
+import { updatecarStock } from "./cars.stock";
 
 
 const createCars = catchAsync(async (req, res) => {
@@ -34,7 +35,7 @@ const createCars = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: status.OK,
       success: true,
-      message: 'Bicycles retrieved successfully',
+      message: 'Cars retrieved successfully',
       data: result.result,
     })
   })
@@ -55,8 +56,56 @@ const createCars = catchAsync(async (req, res) => {
         data: result,
     });
 });
+
+// ------------update car-----------
+
+const updateCar = catchAsync(async (req, res) => {
+  const {
+    user,
+    body: payload,
+    params: { productId },
+  } = req;
+
+  const result = await carService.updateCar(
+    productId,
+    payload,
+    req.files as IImageFiles,
+    user as IJwtPayload
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: " car Product updated successfully",
+    data: result,
+  });
+});
+
+// ---------------deleteCar---------------
+
+const deleteCar=catchAsync(async(req, res)=>{
+  const {
+    user,
+    params: { productId },
+  } = req;
+
+  const result = await carService.deleteCar(
+    productId,
+    user as IJwtPayload
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: " car Product deleted successfully",
+    data: result,
+  });
+})
+
+
   export const carController={
     createCars,
     getSiglecarProduct,
-    getAllCars
+    getAllCars,
+    updateCar,
+    deleteCar
   }

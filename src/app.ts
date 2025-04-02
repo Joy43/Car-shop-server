@@ -1,6 +1,5 @@
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
-
 import router from './app/routes';
 import os from 'os';
 import cookieParser from 'cookie-parser';
@@ -8,19 +7,22 @@ import globalErrorHandler from './app/modeules/middlewates/globalErrorhandler';
 import status from 'http-status';
 import { StatusCodes } from 'http-status-codes';
 
+const app: Application = express();
 
-const app:Application=express();
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(cookieParser());
-// parsers api
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// -----api end point--------
+
+// ✅ Increase request payload limit to fix "request entity too large" error
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// ----- API Endpoints --------
 app.use('/api', router);
 
-//-------------global error handler-------------------
-app.use(globalErrorHandler)
-// -----root api endpoint------
+// Global error handler
+app.use(globalErrorHandler);
+
+// ----- Root API Endpoint ------
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   const currentDateTime = new Date().toISOString();
   const clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
@@ -30,7 +32,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 
   res.status(StatusCodes.OK).json({
     success: true,
-    message: "car industy server is running Now",
+    message: "Car Industry server is running now",
     version: "1.0.0",
     clientDetails: {
       ipAddress: clientIp,
@@ -50,16 +52,15 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-
-//----------------handle not found----------------------
+// Handle Not Found Routes
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(status.NOT_FOUND).json({
     success: false,
-    message: 'Not Found',
+    message: "Not Found",
     errorMessages: [
       {
         path: req.originalUrl,
-        message: 'API Not Found',
+        message: "API Not Found",
       },
     ],
   });

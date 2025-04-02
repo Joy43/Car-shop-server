@@ -3,6 +3,8 @@ import catchAsync from "../utils/catchAsync";
 import { AuthService } from "./auth.service";
 import sendResponse from "../utils/sendRequest";
 import status from "http-status";
+import config from "../../config";
+
 
 // ---------- register---------------
 const register=async(req:Request,res:Response)=>{
@@ -21,6 +23,15 @@ const register=async(req:Request,res:Response)=>{
 
 const login=catchAsync(async(req:Request,res:Response)=>{
     const result=await AuthService.login(req.body);
+    const {  token,refreshToken } = result;
+
+    res.cookie('refreshToken', refreshToken, {
+      secure: config.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+    });
+    
 
     sendResponse(res,{
        
@@ -29,13 +40,29 @@ const login=catchAsync(async(req:Request,res:Response)=>{
         statusCode:status.OK,
     
         data: {
-            token: result.token,
+            token,
+            refreshToken
+            
             
         },
     })
 });
+// ----------refresh token --------------
+const refreshTokens=catchAsync(async(req, res)=>{
+    const { refreshToken } = req.cookies;
+  const result = await AuthService.refreshTokens(refreshToken);
 
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Access token is retrieved successfully!',
+    data: result,
+  });
+})
 
 export const AuthController={
-    register,login
+    register,
+    login,
+    refreshTokens
+
 }

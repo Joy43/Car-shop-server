@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
 const user_model_1 = __importDefault(require("./user.model"));
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    payload.role = 'user';
+    payload.role = 'admin';
     const result = yield user_model_1.default.create(payload);
     return result;
 });

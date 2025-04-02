@@ -4,11 +4,10 @@ import { IImageFiles } from '../../interface/IImageFile';
 import { IJwtPayload } from "../auth/auth.interface";
 import AppError from "../error/AppError";
 import { StatusCodes } from "http-status-codes";
-import status from "http-status";
-import { carController } from "./cars.controller";
-import { query } from "express";
+
 import QueryBuilder from "../../builder/QueryBuilder";
 import { carSearchableFields } from "./cars.constant";
+import User from "../user/user.model";
 
 // Define carsearchableField with appropriate fields
 
@@ -65,8 +64,53 @@ const getSinglecarProduct = async (productId: string) => {
     };
 };
 
+// --------update cars service-----------------
+
+const updateCar=async(
+    productId: string,
+    payload: Partial<Tcars>,
+    productImages: IImageFiles,
+    authUser: IJwtPayload
+
+)=>{
+    const { images } = productImages;
+    const user = await User.findById(authUser.userId);
+    const car = await Car.findOne({
+      
+        _id: productId,
+     });
+     if(!user){
+        throw new AppError(StatusCodes.BAD_REQUEST,'user is not aviable')
+     }
+     if (!car) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Car Not Found');
+     }
+     if (images && images.length > 0) {
+        payload.imageUrls = images.map((image) => image.path);
+     }
+     return await Car.findByIdAndUpdate(productId, payload, { new: true });
+};
+
+// ------------delete car product-----------
+
+const deleteCar=async(productId:string,authUser:IJwtPayload)=>{
+    const user=await User.findById(authUser.userId);
+    const car=await Car.findOne({
+        _id:productId,
+    });
+
+    if(!user){
+        throw new AppError(StatusCodes.BAD_REQUEST,'Admin user not aviable')
+    }
+    if(!car){
+        throw new AppError(StatusCodes.BAD_REQUEST,'Car product not')
+    }
+    return await Car.findByIdAndDelete(productId);
+};
 export const carService={
     createCars,
     getSinglecarProduct,
-    getAllCars
-}
+    getAllCars,
+    updateCar,
+    deleteCar
+};

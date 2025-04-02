@@ -1,69 +1,113 @@
-
 import { TUser } from "../user/user.interface";
-
-
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
-
+import jwt from 'jsonwebtoken';
 import User from "../user/user.model";
 import AppError from "../error/AppError";
 import httpStatus from 'http-status';
+import { TLoginUser } from "./auth.interface";
+import { createToken, verifyToken } from "./auth.utils";
+import config from "../../config";
 
 // ---------- register-------
-const register=async(payload:TUser)=>{
-    const result=await User.create(payload);
-return result;
-}
+const register = async (payload: TUser) => {
+    const result = await User.create(payload);
+    return result;
+};
+
 /* 
 #######-----------------------------######
-        login
+        Login Function
 #####--------------------------------#######
 */
-const login = async (payload: { email: string; password: string }) => {
-    // checking user is exist
+const login = async (payload: TLoginUser) => {
+    // Checking if user exists
     const user = await User.findOne({ email: payload?.email }).select('+password');
-  
+
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND,'This user is not found !')
+        throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
     }
-  
-    // checking if the user is blocked
-    const status= user?.status
-  
-    if (status === 'blocked') {
-      throw new AppError(httpStatus.FORBIDDEN,'This user is blocked !')
+
+    if (user?.isDeleted) {
+        throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
     }
-  
-  /* 
-  --------------------------
-  checking  password  correct
-  -----------------------------
-  */
-    const isPasswordMatched = await bcrypt.compare(
-      payload?.password,
-      user?.password
-    )
-  
+
+    if (user?.status === 'blocked') {
+        throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
+    }
+
+    // Checking password correctness
+    const isPasswordMatched = await bcrypt.compare(payload?.password, user?.password);
+
     if (!isPasswordMatched) {
-      throw new AppError(httpStatus.FORBIDDEN,'Wrong Password 😈! provide correct password ')
+        throw new AppError(httpStatus.FORBIDDEN, 'Wrong Password! Provide correct password.');
     }
-  
+
+    // Creating JWT payload
+    const jwtPayload = {
+        userId: user._id.toString(),
+        role: user.role,
+        name: user.name,
+        email: user.email
+    };
+
+    // Creating access and refresh tokens
+    const token = createToken(jwtPayload, config.jwt_access_secret as string, config.jwt_access_expires_in as string);
+    const refreshToken = createToken(jwtPayload, config.jwt_refresh_secret as string, config.jwt_refresh_expires_in as string);
+
+    return {
+        token,
+        refreshToken,
+        user
+    };
+};
+
 /* 
 ---------------------------------------
-create token and sent to the  client
+  Refresh Token Function (Moved Outside)
 ----------------------------------------
 */
-const jwtPayload = {
-  _id: user._id.toString(),
-  email: user.email,
-  role: user.role,
+const refreshTokens = async (token: string) => {
+    try {
+        // Checking if the token is valid
+        const decoded = verifyToken(token, config.jwt_refresh_secret as string);
+        const { userId } = decoded;
+
+        // Checking if user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+        }
+
+        if (user.isDeleted) {
+            throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
+        }
+
+        if (user.status === 'blocked') {
+            throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
+        }
+
+        // Creating a new access token
+        const jwtPayload = {
+          userId: user._id.toString(),
+          role: user.role,
+          name: user.name,
+          email: user.email
+        };
+
+        const newToken = createToken(
+          jwtPayload,
+           config.jwt_access_secret as string, config.jwt_access_expires_in as string);
+
+        return {
+            token: newToken,
+        };
+    } catch (error) {
+        throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid refresh token!');
+    }
 };
-  
-    const token = jwt.sign(jwtPayload, "secret", { expiresIn: '25d' });
-    console.log('Token in Auth Middleware:', token);
-    
-    return {token, user};
-  }
-export const AuthService={
-    register,login
-}
+
+export const AuthService = {
+    register,
+    login,
+    refreshTokens  
+};

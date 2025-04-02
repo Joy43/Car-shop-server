@@ -16,13 +16,27 @@ parseBody,
 validateRequest(carsValidation.createCarValidationSchema),carController.createCars);
 
 
+
 // ----------update product car-------------
 router.patch(
     
     '/:productId',
+    auth(USER_ROLE.admin),
+    multerUpload.fields([{name:'images'}]),
+    parseBody,
+    carController.updateCar
 
 );
 // ------get single car product --------------
 
 router.get('/:productId',carController.getSiglecarProduct);
+// ------get all car product-------------
+router.get('/',carController.getAllCars);
+// --------delete car------------
+
+router.delete(
+    '/:productId',
+    auth(USER_ROLE.admin),
+    carController.deleteCar
+);
 export const carsRouter=router;
