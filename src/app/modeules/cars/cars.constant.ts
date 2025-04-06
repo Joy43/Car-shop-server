@@ -1,5 +1,5 @@
 export const carSearchableFields = [
-    '  brand',
+    'brand',
     'category',
     'model',
     'description'

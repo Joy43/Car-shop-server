@@ -76,7 +76,7 @@ const updateCar = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: " car Product updated successfully",
+    message: " Car Product updated successfully",
     data: result,
   });
 });

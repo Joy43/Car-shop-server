@@ -4,6 +4,7 @@ import config from "../../config";
 
 import { TUser } from "./user.interface";
 import bcrypt from 'bcrypt';
+import { UserStatus } from "./user.contant";
 
 
 // -----------user schema--------------
@@ -30,10 +31,12 @@ const userSchema=new Schema<TUser>(
             enum: ['admin', 'user'],
             default: 'user',
           },
-          isBlocked: {
-            type: Boolean,
-            default: false,
+          status: {
+            type: String,
+            enum: UserStatus,
+            default: 'in-progress',
           },
+        
           isDeleted: {
             type: Boolean,
             default: false,

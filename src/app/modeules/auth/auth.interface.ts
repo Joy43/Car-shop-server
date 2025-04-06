@@ -9,4 +9,5 @@ export interface IJwtPayload {
     email: string;
     role:'user' | 'admin';
     isBlocked: boolean;
+    status: 'in-progress' | 'blocked';
   }

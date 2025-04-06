@@ -13,28 +13,28 @@ import User from "../user/user.model";
 
 
 // --------------create car product -----------------
-const createCars=async(
+const createCars = async (
     productData: Partial<Tcars>,
-    productImages: IImageFiles,
+    productImages: IImageFiles = { images: [] }, 
     authUser: IJwtPayload
-)=>{
-//   -------image functionality--------------
-const {images}=productImages;
-if(!images || images.length ===0){
-    throw new AppError(
+  ) => {
+    const { images } = productImages;
+  
+    if (!images || images.length === 0) {
+      throw new AppError(
         StatusCodes.BAD_GATEWAY,
         'cars image is required'
-    );
-}
-productData.imageUrls = images.map((image) => image.path);
-const Dataparse={ ...productData, authUser }
-console.log(Dataparse);
-const result=await Car.create(
-    Dataparse
-)
-return result;
-
-};
+      );
+    }
+  
+    productData.imageUrls = images.map((image) => image.path);
+    const Dataparse = { ...productData, authUser };
+    console.log(Dataparse);
+  
+    const result = await Car.create(Dataparse);
+    return result;
+  };
+  
 
 // ------get all cars-----------
 

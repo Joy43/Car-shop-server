@@ -23,8 +23,25 @@ const createUser = catchAsync(
         data: result,
       });
     });
-   
-  
+
+
+    const createAdmin = catchAsync(async (req, res) => {
+      const { name, email, password } = req.body;
+    
+      const result = await userService.createAdminIntoDB({
+        name,
+        email,
+        password,
+        role: 'admin',
+      });
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Admin is created succesfully',
+        data: result,
+      });
+    });
+  // -----------get user----------------
   const getUser = catchAsync(async (req, res) => {
     const result = await userService.getUser()
   
@@ -50,11 +67,10 @@ const createUser = catchAsync(
       data: result,
     })
   })
-  
+  // -----------update user----------------
   const updateUser = catchAsync(async (req, res) => {
-    const userId = req.params.userId
-    const body = req.body
-    const result = await userService.updateUser(userId, body)
+    const { userId } = req.params;
+    const result = await userService.updateUser(userId,req.body)
   
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -62,8 +78,8 @@ const createUser = catchAsync(
       message: 'User updated successfully',
       data: result,
     })
-  })
-  
+  });
+  // --------delete user------------
   const deleteUser = catchAsync(async (req, res) => {
     const userId = req.params.userId
     await userService.deleteUser(userId)
@@ -82,4 +98,5 @@ const createUser = catchAsync(
     getSingleUser,
     updateUser,
     deleteUser,
+    createAdmin 
   }

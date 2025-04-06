@@ -26,7 +26,7 @@ const carStoreSchema = new Schema<Tcars>(
     },
     category: {
       type: String,
-      enum: ["Sedan", "SUV", "Truck", "Coupe", "Convertible"],
+      enum: ["Sedan", "SUV", "Truck", "Coupe", "Convertible","BMW","Tesla Cybertruck"],
       required: [true, " Please specify a valid category."],
     },
     imageUrls: {
