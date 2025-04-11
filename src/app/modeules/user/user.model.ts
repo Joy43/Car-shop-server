@@ -36,7 +36,9 @@ const userSchema=new Schema<TUser>(
             enum: UserStatus,
             default: 'in-progress',
           },
-        
+          phone: { type: String, default: 'N/A' },
+          address: { type: String, default: 'N/A' },
+          city: { type: String, default: 'N/A' },
           isDeleted: {
             type: Boolean,
             default: false,

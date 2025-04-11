@@ -12,14 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseBody = void 0;
-const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
+exports.adminService = void 0;
 const AppError_1 = __importDefault(require("../error/AppError"));
+const user_model_1 = __importDefault(require("../user/user.model"));
 const http_status_codes_1 = require("http-status-codes");
-exports.parseBody = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.data) {
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, 'Please provide data in the body under data key');
+const blockUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.default.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "User not found");
     }
-    req.body = req.body.data;
-    next();
-}));
+    user.isBlocked = true;
+    yield user.save();
+    return user;
+});
+exports.adminService = {
+    blockUser
+};

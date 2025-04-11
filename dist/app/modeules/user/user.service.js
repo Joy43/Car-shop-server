@@ -15,8 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
 const user_model_1 = __importDefault(require("./user.model"));
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    payload.role = 'admin';
+    payload.role = 'user';
     const result = yield user_model_1.default.create(payload);
+    return result;
+});
+const createAdminIntoDB = (userData) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.default.create(userData);
     return result;
 });
 const getUser = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -27,10 +31,8 @@ const getSingleUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.default.findById(id);
     return result;
 });
-const updateUser = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.default.findByIdAndUpdate(id, data, {
-        new: true,
-    });
+const updateUser = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.default.findByIdAndUpdate(id, payload);
     return result;
 });
 const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -43,4 +45,5 @@ exports.userService = {
     getSingleUser,
     updateUser,
     deleteUser,
+    createAdminIntoDB
 };

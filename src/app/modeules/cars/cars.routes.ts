@@ -11,7 +11,6 @@ import { parseBody } from "../middlewates/bodyParse";
 const router=Router()
 // --------create car product-----------
 router.post('/',auth(USER_ROLE.admin),
-multerUpload.fields([{name:'images'}]),
 parseBody,
 validateRequest(carsValidation.createCarValidationSchema),carController.createCars);
 
@@ -22,7 +21,6 @@ router.patch(
     
     '/:productId',
     auth(USER_ROLE.admin),
-    multerUpload.fields([{name:'images'}]),
     parseBody,
     carController.updateCar
 

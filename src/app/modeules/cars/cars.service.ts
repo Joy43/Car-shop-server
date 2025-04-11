@@ -12,30 +12,23 @@ import User from "../user/user.model";
 // Define carsearchableField with appropriate fields
 
 
-// --------------create car product -----------------
 const createCars = async (
-    productData: Partial<Tcars>,
-    productImages: IImageFiles = { images: [] }, 
+    data: Partial<Tcars>,
     authUser: IJwtPayload
   ) => {
-    const { images } = productImages;
-  
-    if (!images || images.length === 0) {
-      throw new AppError(
-        StatusCodes.BAD_GATEWAY,
-        'cars image is required'
-      );
+    
+    if (!data.imageUrls || data.imageUrls.length === 0) {
+      throw new AppError(StatusCodes.BAD_REQUEST, 'Car image is required');
     }
   
-    productData.imageUrls = images.map((image) => image.path);
-    const Dataparse = { ...productData, authUser };
-    console.log(Dataparse);
-  
-    const result = await Car.create(Dataparse);
+    const result = await Car.create({ 
+      ...data,
+      authUser 
+    });
+    
     return result;
   };
   
-
 // ------get all cars-----------
 
 const getAllCars=async(query:Record<string,unknown>)=>{
@@ -69,11 +62,11 @@ const getSinglecarProduct = async (productId: string) => {
 const updateCar=async(
     productId: string,
     payload: Partial<Tcars>,
-    productImages: IImageFiles,
+    
     authUser: IJwtPayload
 
 )=>{
-    const { images } = productImages;
+ 
     const user = await User.findById(authUser.userId);
     const car = await Car.findOne({
       
@@ -85,9 +78,7 @@ const updateCar=async(
      if (!car) {
         throw new AppError(StatusCodes.NOT_FOUND, 'Car Not Found');
      }
-     if (images && images.length > 0) {
-        payload.imageUrls = images.map((image) => image.path);
-     }
+   
      return await Car.findByIdAndUpdate(productId, payload, { new: true });
 };
 

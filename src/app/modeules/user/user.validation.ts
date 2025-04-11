@@ -19,10 +19,29 @@ const userValidationSchema = z.object({
       .string({
         required_error: 'Password is required for your safety purpuse',
       })
-      .max(40, { message: 'Password can not be more than 40 characters' }),
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .max(40, { message: 'Password can not be more than 40 characters' }).optional(),
+
+  }),
+});
+
+const updateUserValidationSchema = z.object({
+  body: z.object({
+    email: z
+      .string({
+        invalid_type_error: 'Email must be string',
+      })
+      .optional(),
+    password: z
+      .string({
+        invalid_type_error: 'Password must be string',
+      })
+      .max(20, { message: 'Password can not be more than 20 characters' })
+      .optional(),
   }),
 });
 
 export const UserValidation = {
   userValidationSchema,
+  updateUserValidationSchema
 };

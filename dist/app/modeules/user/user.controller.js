@@ -27,6 +27,22 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, email, password } = req.body;
+    const result = yield user_service_1.userService.createAdminIntoDB({
+        name,
+        email,
+        password,
+        role: 'admin',
+    });
+    (0, sendRequest_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Admin is created succesfully',
+        data: result,
+    });
+}));
+// -----------get user----------------
 const getUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.userService.getUser();
     (0, sendRequest_1.default)(res, {
@@ -47,10 +63,10 @@ const getSingleUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+// -----------update user----------------
 const updateUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params.userId;
-    const body = req.body;
-    const result = yield user_service_1.userService.updateUser(userId, body);
+    const { userId } = req.params;
+    const result = yield user_service_1.userService.updateUser(userId, req.body);
     (0, sendRequest_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -58,6 +74,7 @@ const updateUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+// --------delete user------------
 const deleteUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
     yield user_service_1.userService.deleteUser(userId);
@@ -74,4 +91,5 @@ exports.userController = {
     getSingleUser,
     updateUser,
     deleteUser,
+    createAdmin
 };

@@ -20,17 +20,11 @@ const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const cars_constant_1 = require("./cars.constant");
 const user_model_1 = __importDefault(require("../user/user.model"));
 // Define carsearchableField with appropriate fields
-// --------------create car product -----------------
-const createCars = (productData, productImages, authUser) => __awaiter(void 0, void 0, void 0, function* () {
-    //   -------image functionality--------------
-    const { images } = productImages;
-    if (!images || images.length === 0) {
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_GATEWAY, 'cars image is required');
+const createCars = (data, authUser) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!data.imageUrls || data.imageUrls.length === 0) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, 'Car image is required');
     }
-    productData.imageUrls = images.map((image) => image.path);
-    const Dataparse = Object.assign(Object.assign({}, productData), { authUser });
-    console.log(Dataparse);
-    const result = yield cars_model_1.default.create(Dataparse);
+    const result = yield cars_model_1.default.create(Object.assign(Object.assign({}, data), { authUser }));
     return result;
 });
 // ------get all cars-----------
@@ -55,8 +49,7 @@ const getSinglecarProduct = (productId) => __awaiter(void 0, void 0, void 0, fun
     return Object.assign({}, carObj);
 });
 // --------update cars service-----------------
-const updateCar = (productId, payload, productImages, authUser) => __awaiter(void 0, void 0, void 0, function* () {
-    const { images } = productImages;
+const updateCar = (productId, payload, authUser) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findById(authUser.userId);
     const car = yield cars_model_1.default.findOne({
         _id: productId,
@@ -66,9 +59,6 @@ const updateCar = (productId, payload, productImages, authUser) => __awaiter(voi
     }
     if (!car) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, 'Car Not Found');
-    }
-    if (images && images.length > 0) {
-        payload.imageUrls = images.map((image) => image.path);
     }
     return yield cars_model_1.default.findByIdAndUpdate(productId, payload, { new: true });
 });

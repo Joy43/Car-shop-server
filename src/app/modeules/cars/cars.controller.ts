@@ -10,24 +10,19 @@ import { updatecarStock } from "./cars.stock";
 
 
 const createCars = catchAsync(async (req, res) => {
-    
-  
-    const result= await carService.createCars(
-      req.body,
-      req.files as IImageFiles,
-      req.user as IJwtPayload
-      
-      );
-    console.log(result);
-  
-    sendResponse(res, {
-      statusCode: 201,
-      success: true,
-      message: 'cars created sucessfully ',
-      data: result,
-    });
-    return;
+  const result = await carService.createCars(
+    req.body,  
+    req.user as IJwtPayload
+  );
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'Car created successfully',
+    data: result,
   });
+});
+
 
   // -----------------get all car product-------------
   const getAllCars=catchAsync(async(req,res)=>{
@@ -38,7 +33,7 @@ const createCars = catchAsync(async (req, res) => {
       message: 'Cars retrieved successfully',
       data: result.result,
     })
-  })
+  });
 
   // ---------get single product -----------
 
@@ -69,7 +64,7 @@ const updateCar = catchAsync(async (req, res) => {
   const result = await carService.updateCar(
     productId,
     payload,
-    req.files as IImageFiles,
+
     user as IJwtPayload
   );
 
@@ -98,8 +93,8 @@ const deleteCar=catchAsync(async(req, res)=>{
     success: true,
     message: " car Product deleted successfully",
     data: result,
-  });
-})
+  })
+});
 
 
   export const carController={
@@ -108,4 +103,4 @@ const deleteCar=catchAsync(async(req, res)=>{
     getAllCars,
     updateCar,
     deleteCar
-  }
+  };

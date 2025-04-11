@@ -19,15 +19,13 @@ const cars_service_1 = require("./cars.service");
 const http_status_codes_1 = require("http-status-codes");
 const http_status_1 = __importDefault(require("http-status"));
 const createCars = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield cars_service_1.carService.createCars(req.body, req.files, req.user);
-    console.log(result);
+    const result = yield cars_service_1.carService.createCars(req.body, req.user);
     (0, sendRequest_1.default)(res, {
         statusCode: 201,
         success: true,
-        message: 'cars created sucessfully ',
+        message: 'Car created successfully',
         data: result,
     });
-    return;
 }));
 // -----------------get all car product-------------
 const getAllCars = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,11 +53,11 @@ const getSiglecarProduct = (0, catchAsync_1.default)((req, res) => __awaiter(voi
 // ------------update car-----------
 const updateCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user, body: payload, params: { productId }, } = req;
-    const result = yield cars_service_1.carService.updateCar(productId, payload, req.files, user);
+    const result = yield cars_service_1.carService.updateCar(productId, payload, user);
     (0, sendRequest_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
-        message: " car Product updated successfully",
+        message: " Car Product updated successfully",
         data: result,
     });
 }));

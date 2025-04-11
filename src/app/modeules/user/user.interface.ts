@@ -5,6 +5,10 @@ export type TUser = {
   name: string;
   email: string;
   password: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  needsPasswordChange: boolean;
   role: 'user' | 'admin';
   status: 'in-progress' | 'blocked';
   isBlocked: boolean;

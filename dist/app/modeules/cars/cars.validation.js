@@ -20,7 +20,7 @@ const createCarValidationSchema = zod_1.z.object({
             required_error: "Price is required.",
             invalid_type_error: "Price must be a number.",
         }).min(0, "Price cannot be negative."),
-        category: zod_1.z.enum(["Sedan", "SUV", "Truck", "Coupe", "Convertible"], {
+        category: zod_1.z.enum(["Sedan", "SUV", "Truck", "Coupe", "Convertible", "BMW", "Tesla Cybertruck"], {
             required_error: "Please specify a valid category.",
         }),
         description: zod_1.z.string({
@@ -44,7 +44,7 @@ const updateCarsValidationSchema = zod_1.z.object({
         model: zod_1.z.string().optional(),
         year: zod_1.z.number().min(1886, "The year must be 1886 or later.").optional(),
         price: zod_1.z.number().min(0, "Price cannot be negative.").optional(),
-        category: zod_1.z.enum(["Sedan", "SUV", "Truck", "Coupe", "Convertible"]).optional(),
+        category: zod_1.z.enum(["Sedan", "SUV", "Truck", "Coupe", "Convertible", "BMW", "Tesla Cybertruck"]).optional(),
         description: zod_1.z.string().max(500, "Description cannot exceed 500 characters.").optional(),
         quantity: zod_1.z.number().min(0, "Quantity cannot be negative.").optional(),
         inStock: zod_1.z.boolean().optional(),

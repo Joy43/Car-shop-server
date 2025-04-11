@@ -31,8 +31,8 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 // ---------------- login ------
 const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthService.login(req.body);
-    const { token } = result;
-    res.cookie('refreshToken', {
+    const { token, refreshToken } = result;
+    res.cookie('refreshToken', refreshToken, {
         secure: config_1.default.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: 'none',
@@ -44,6 +44,7 @@ const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
         statusCode: http_status_1.default.OK,
         data: {
             token,
+            refreshToken
         },
     });
 }));
