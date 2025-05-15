@@ -4,7 +4,7 @@ import validateRequest from "../middlewates/validateRequest";
 import { carsValidation } from "./cars.validation";
 import { carController } from "./cars.controller";
 import { USER_ROLE } from "../user/user.contant";
-import { multerUpload } from "../../config/multer.config";
+
 import { parseBody } from "../middlewates/bodyParse";
 
 
@@ -22,6 +22,7 @@ router.patch(
     '/:productId',
     auth(USER_ROLE.admin),
     parseBody,
+    validateRequest(carsValidation.updateCarsValidationSchema),
     carController.updateCar
 
 );

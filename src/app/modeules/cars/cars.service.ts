@@ -1,6 +1,6 @@
 import { Tcars } from "./cars.interface";
-import Car from "./cars.model";
-import { IImageFiles } from '../../interface/IImageFile';
+
+
 import { IJwtPayload } from "../auth/auth.interface";
 import AppError from "../error/AppError";
 import { StatusCodes } from "http-status-codes";
@@ -8,6 +8,7 @@ import { StatusCodes } from "http-status-codes";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { carSearchableFields } from "./cars.constant";
 import User from "../user/user.model";
+import { Car } from "./cars.model";
 
 // Define carsearchableField with appropriate fields
 
@@ -62,19 +63,18 @@ const getSinglecarProduct = async (productId: string) => {
 const updateCar=async(
     productId: string,
     payload: Partial<Tcars>,
-    
-    authUser: IJwtPayload
+
 
 )=>{
  
-    const user = await User.findById(authUser.userId);
+  
     const car = await Car.findOne({
       
         _id: productId,
      });
-     if(!user){
-        throw new AppError(StatusCodes.BAD_REQUEST,'user is not aviable')
-     }
+    //  if(!user){
+    //     throw new AppError(StatusCodes.BAD_REQUEST,'user is not aviable')
+    //  }
      if (!car) {
         throw new AppError(StatusCodes.NOT_FOUND, 'Car Not Found');
      }

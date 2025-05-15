@@ -56,7 +56,7 @@ const createCars = catchAsync(async (req, res) => {
 
 const updateCar = catchAsync(async (req, res) => {
   const {
-    user,
+
     body: payload,
     params: { productId },
   } = req;
@@ -65,7 +65,7 @@ const updateCar = catchAsync(async (req, res) => {
     productId,
     payload,
 
-    user as IJwtPayload
+
   );
 
   sendResponse(res, {

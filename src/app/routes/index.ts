@@ -4,6 +4,7 @@ import { authRoute } from "../modeules/auth/auth.router";
 import { carsRouter } from "../modeules/cars/cars.routes";
 import { AdminRouter } from "../modeules/admin/admin.route";
 import { orderRouter } from "../modeules/order/order.routes";
+import { ReviewRoutes } from "../modeules/review/review.routes";
 
 
 
@@ -29,7 +30,12 @@ const moduleRoutes= [
     {
         path:'/order',
         route:orderRouter,
-    }
+    },
+    {
+        path:'/review',
+        route:ReviewRoutes,
+    },
+    
     
 
 ]

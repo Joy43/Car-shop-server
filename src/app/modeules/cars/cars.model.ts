@@ -55,5 +55,6 @@ const carStoreSchema = new Schema<Tcars>(
 );
 
 // Export the model for access another component
-const Car = model<Tcars>("Car", carStoreSchema);
-export default Car;
+// const Car = model<Tcars>("Car", carStoreSchema);
+// export default Car;
+export const Car=model<Tcars>("Car", carStoreSchema);

@@ -20,7 +20,7 @@ router.get('/', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin, user_contant
 // --------------get single order------------------
 router.get('/:orderId', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin, user_contant_1.USER_ROLE.user), order_controller_1.orderContoller.getSingleOrder);
 // --------------update order------------------
-router.patch('/:id', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), (0, validateRequest_1.default)(order_validation_1.OrderValidations.updateOrderSchema), order_controller_1.orderContoller.updateOrder);
+router.patch('/:orderId', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), (0, validateRequest_1.default)(order_validation_1.OrderValidations.updateOrderSchema), order_controller_1.orderContoller.updateOrder);
 // --------------delete order------------------
-router.delete('/:id', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), order_controller_1.orderContoller.deleteOrder);
+router.delete('/:orderId', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), order_controller_1.orderContoller.deleteOrder);
 exports.orderRouter = router;

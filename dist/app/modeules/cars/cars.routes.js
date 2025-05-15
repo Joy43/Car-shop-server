@@ -15,7 +15,7 @@ const router = (0, express_1.Router)();
 // --------create car product-----------
 router.post('/', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), bodyParse_1.parseBody, (0, validateRequest_1.default)(cars_validation_1.carsValidation.createCarValidationSchema), cars_controller_1.carController.createCars);
 // ----------update product car-------------
-router.patch('/:productId', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), bodyParse_1.parseBody, cars_controller_1.carController.updateCar);
+router.patch('/:productId', (0, Auth_1.default)(user_contant_1.USER_ROLE.admin), bodyParse_1.parseBody, (0, validateRequest_1.default)(cars_validation_1.carsValidation.updateCarsValidationSchema), cars_controller_1.carController.updateCar);
 // ------get single car product --------------
 router.get('/:productId', cars_controller_1.carController.getSiglecarProduct);
 // ------get all car product-------------

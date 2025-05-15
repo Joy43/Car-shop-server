@@ -49,14 +49,13 @@ const getSinglecarProduct = (productId) => __awaiter(void 0, void 0, void 0, fun
     return Object.assign({}, carObj);
 });
 // --------update cars service-----------------
-const updateCar = (productId, payload, authUser) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_model_1.default.findById(authUser.userId);
+const updateCar = (productId, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const car = yield cars_model_1.default.findOne({
         _id: productId,
     });
-    if (!user) {
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, 'user is not aviable');
-    }
+    //  if(!user){
+    //     throw new AppError(StatusCodes.BAD_REQUEST,'user is not aviable')
+    //  }
     if (!car) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, 'Car Not Found');
     }

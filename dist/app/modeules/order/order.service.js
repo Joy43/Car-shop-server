@@ -132,7 +132,7 @@ const createOrder = (userEmail, payload, client_ip) => __awaiter(void 0, void 0,
     }
     return payment.checkout_url;
 });
-// ------------order service------------------
+// ------------order varify service------------------
 const verifyPayment = (order_id) => __awaiter(void 0, void 0, void 0, function* () {
     const verifiedPayment = yield order_utils_1.orderUtils.verifyPaymentAsync(order_id);
     if (verifiedPayment.length) {

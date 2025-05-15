@@ -38,14 +38,14 @@ router.get(
   );
 // --------------update order------------------
 router.patch(
-    '/:id',
+    '/:orderId',
     auth(USER_ROLE.admin),
     validateRequest(OrderValidations.updateOrderSchema),
     orderContoller.updateOrder,
 );
 // --------------delete order------------------
 router.delete(
-    '/:id',
+    '/:orderId',
     auth(USER_ROLE.admin),
     orderContoller.deleteOrder,
 );
