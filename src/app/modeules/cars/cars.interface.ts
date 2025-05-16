@@ -10,7 +10,9 @@ export type Tcars={
     description:string,
     quantity:number,
     inStock:boolean,
-    author:mongoose.Schema.Types.ObjectId
+    author:mongoose.Schema.Types.ObjectId,
+    averageRating?: number;
+    ratingCount?: number;
 
 }
 export interface carsModel extends Model <Tcars>{

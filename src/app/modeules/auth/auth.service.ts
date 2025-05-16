@@ -47,7 +47,8 @@ const login = async (payload: TLoginUser) => {
         userId: user._id.toString(),
         role: user.role,
         name: user.name,
-        email: user.email
+        email: user.email,
+        user:user._id.toString()
     };
 
     // Creating access and refresh tokens
@@ -62,9 +63,9 @@ const login = async (payload: TLoginUser) => {
 };
 
 /* 
----------------------------------------
+---------------------------------------------------------------
   Refresh Token Function (Moved Outside)
-----------------------------------------
+----------------------------------------------------------
 */
 const refreshTokens = async (token: string) => {
     try {
@@ -91,12 +92,13 @@ const refreshTokens = async (token: string) => {
           userId: user._id.toString(),
           role: user.role,
           name: user.name,
-          email: user.email
+          email: user.email,
+          user:user._id.toString()
         };
 
         const newToken = createToken(
           jwtPayload,
-           config.jwt_access_secret as string, config.jwt_access_expires_in as string);
+         config.jwt_access_secret as string, config.jwt_access_expires_in as string);
 
         return {
             token: newToken,

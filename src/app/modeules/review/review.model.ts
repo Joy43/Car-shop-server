@@ -15,11 +15,12 @@ const reviewSchema = new Schema<IReview>(
          min: [1, 'Rating must be at least 1.'],
          max: [5, 'Rating cannot be greater than 5.'],
       },
-      user: {
-         type: Schema.Types.ObjectId,
-         ref: 'User',
-         required: true,
-      },
+     user: {
+  type: Schema.Types.ObjectId,
+  ref: 'User',
+  required: true,
+},
+
       car: {
          type: Schema.Types.ObjectId,
          ref: 'Car',

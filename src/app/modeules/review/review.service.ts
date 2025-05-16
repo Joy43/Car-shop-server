@@ -8,68 +8,87 @@ import { Car } from "../cars/cars.model";
 
 import QueryBuilder from "../../builder/QueryBuilder";
 
-const createReview=async(payload: IReview, user: JwtPayload)=>{
-const session=await mongoose.startSession();
-try{
+const createReview = async (payload: IReview, authUser: JwtPayload) => {
+  console.log("Payload:", payload);
+  console.log("Authenticated user:", authUser);
+
+  const session = await mongoose.startSession();
+
+  try {
     session.startTransaction();
-    const existingReview=await Review.findOne(
-        {
-            user:user.userId,
-            car:payload.car
-        },
-        null,
-        {session}
 
+    const userId = payload.user || authUser.userId;
+
+    if (!userId || !mongoose.Types.ObjectId.isValid(String(userId))) {
+      throw new AppError(status.BAD_REQUEST, "Valid user ID is required.");
+    }
+
+    const existingReview = await Review.findOne(
+      {
+        user: userId,
+        car: payload.car,
+      },
+      null,
+      { session }
     );
-    // ---------check exit review----------
-    if(existingReview){
-        throw new AppError(
-            status.BAD_REQUEST,
-            'you have already reviewed this product'
-        )
-    };
-    // ---------create review---------
-    const review=await Review.create([{...payload,user:user.userId}],{
-        session
-    });
-    // --------aggregate reviews for the product-------
-    const reviews=await Review.aggregate([
-        {
-            $match:{
-                car:review[0].car
-            },
-        },
-        {
-            $group:{
-                _id:null,
-                averageRating:{$avg:'$rating'},
-                ratingCount: { $sum: 1 },
-            }
-        }
-    ]);
-      const { averageRating = 0, ratingCount = 0 } = reviews[0] || {};
-         const updatedCar = await Car.findByIdAndUpdate(
-         payload.car,
-         { averageRating, ratingCount },
-         { session, new: true }
-      );
-       if (!updatedCar) {
-         throw new AppError(
-            status.NOT_FOUND,
-            ' car Product not found during rating update.'
-         );
-      }
 
-      await session.commitTransaction();
-      return review;
-}catch (err){
- await session.abortTransaction();
-      throw err;
-}
-finally {
-      session.endSession();
-   }
+    if (existingReview) {
+      throw new AppError(
+        status.BAD_REQUEST,
+        "You have already reviewed this product"
+      );
+    }
+
+    const newReview = new Review({
+      ...payload,
+      user: userId,
+    });
+
+    await newReview.save({ session });
+
+    const reviews = await Review.aggregate([
+      { $match: { car: newReview.car } },
+      {
+        $group: {
+          _id: null,
+          averageRating: { $avg: "$rating" },
+          ratingCount: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const { averageRating = 0, ratingCount = 0 } = reviews[0] || {};
+
+    const updatedCar = await Car.findByIdAndUpdate(
+      payload.car,
+      { averageRating, ratingCount },
+      { session, new: true }
+    );
+
+    if (!updatedCar) {
+      throw new AppError(
+        status.NOT_FOUND,
+        "Car product not found during rating update."
+      );
+    }
+
+    await session.commitTransaction();
+
+    // Populate review with full user and car info
+    const populatedReview = await Review.findById(newReview._id)
+      .populate("user")
+      .populate("car");
+
+    return populatedReview;
+  } catch (err) {
+    await session.abortTransaction();
+    throw err;
+  } finally {
+    session.endSession();
+  }
 };
+
+
 
 // -----------get all review-------
 const getAllReviews=async(query:Record <string,unknown>)=>{

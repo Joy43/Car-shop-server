@@ -16,6 +16,7 @@ const createReview=catchAsync(async(req,res)=>{
       data: result,
    });
 });
+// -----------get all review------
 const getAllReviews = catchAsync(async (req, res) => {
    const result = await ReviewServices.getAllReviews(req.query);
 
