@@ -9,8 +9,11 @@ import { StatusCodes } from 'http-status-codes';
 
 const app: Application = express();
 
-app.use(cors({ origin: ['http://localhost:5173',
-   'https://car-shop-clientsite.vercel.app'], credentials: true }));
+app.use(cors({ origin: [
+  'http://localhost:5173',
+   'https://car-shop-clientsite.vercel.app',
+   'https://openrouter.ai/api/v1/chat/completions',
+  'deepseek/deepseek-r1-distill-qwen-32b:free'], credentials: true }));
 app.use(cookieParser());
 
 // ✅ Increase request payload limit to fix "request entity too large" error
