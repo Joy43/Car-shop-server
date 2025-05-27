@@ -7,6 +7,7 @@ import { orderRouter } from "../modeules/order/order.routes";
 import { ReviewRoutes } from "../modeules/review/review.routes";
 import { MessageRoute } from "../modeules/chat/chat.routes";
 import { chatbotRoute } from "../modeules/chatbot/chatbot.routes";
+import { Wishlistrouter } from "../modeules/wishlist/wishlist.routes";
 
 
 
@@ -44,6 +45,10 @@ const moduleRoutes= [
     {
         path:'/chatbot',
         route:chatbotRoute,
+    },
+    {
+        path:'/wishlist',
+        route:Wishlistrouter,
     },
     
     
