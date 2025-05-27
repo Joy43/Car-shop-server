@@ -1,7 +1,5 @@
 import mongoose, { model, Schema } from "mongoose";
-
 import config from "../../config";
-
 import { TUser } from "./user.interface";
 import bcrypt from 'bcrypt';
 import { UserStatus } from "./user.contant";
@@ -36,6 +34,7 @@ const userSchema=new Schema<TUser>(
             enum: UserStatus,
             default: 'in-progress',
           },
+          image:{type:String,default:'N/A'},
           phone: { type: String, default: 'N/A' },
           address: { type: String, default: 'N/A' },
           city: { type: String, default: 'N/A' },

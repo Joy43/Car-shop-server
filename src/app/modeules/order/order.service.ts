@@ -3,11 +3,12 @@ import { StatusCodes } from "http-status-codes";
 import AppError from "../error/AppError";
 import User from "../user/user.model";
 import { Order } from "./order.model";
-import Car from "../cars/cars.model";
+
 import { orderUtils } from "./order.utils";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { orderSearchableFields } from "./order.constant";
 import { Torder } from "./order.interface";
+import { Car } from "../cars/cars.model";
 
 const createOrder = async (
   userEmail: string,

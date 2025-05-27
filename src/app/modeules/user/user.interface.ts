@@ -11,6 +11,7 @@ export type TUser = {
   needsPasswordChange: boolean;
   role: 'user' | 'admin';
   status: 'in-progress' | 'blocked';
+  image?:string;
   isBlocked: boolean;
   isDeleted: boolean;
  

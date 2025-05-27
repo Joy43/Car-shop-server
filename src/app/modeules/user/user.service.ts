@@ -6,8 +6,7 @@ import User from "./user.model";
 const createUser = async (payload: TUser): Promise<TUser> => {
   payload.role = 'user';
   const result = await User.create(payload)
-
-  return result
+  return result;
 }
 
 const createAdminIntoDB = async (userData: TAdmin) => {
@@ -17,7 +16,7 @@ const createAdminIntoDB = async (userData: TAdmin) => {
 
 const getUser = async () => {
   const result = await User.find()
-  return result
+  return result;
 };
 
 const getSingleUser = async (id: string) => {

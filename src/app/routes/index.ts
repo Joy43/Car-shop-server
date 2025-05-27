@@ -5,6 +5,8 @@ import { carsRouter } from "../modeules/cars/cars.routes";
 import { AdminRouter } from "../modeules/admin/admin.route";
 import { orderRouter } from "../modeules/order/order.routes";
 import { ReviewRoutes } from "../modeules/review/review.routes";
+import { MessageRoute } from "../modeules/chat/chat.routes";
+import { chatbotRoute } from "../modeules/chatbot/chatbot.routes";
 
 
 
@@ -34,6 +36,14 @@ const moduleRoutes= [
     {
         path:'/review',
         route:ReviewRoutes,
+    },
+    {
+        path:'/chat',
+        route:MessageRoute,
+    },
+    {
+        path:'/chatbot',
+        route:chatbotRoute,
     },
     
     

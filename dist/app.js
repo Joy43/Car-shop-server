@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// your existing app.ts (no socket.io code here)
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const routes_1 = __importDefault(require("./app/routes"));
@@ -12,10 +13,13 @@ const globalErrorhandler_1 = __importDefault(require("./app/modeules/middlewates
 const http_status_1 = __importDefault(require("http-status"));
 const http_status_codes_1 = require("http-status-codes");
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({ origin: ['http://localhost:5173',
-        'https://car-shop-clientsite.vercel.app'], credentials: true }));
+app.use((0, cors_1.default)({ origin: [
+        'http://localhost:5173',
+        'https://car-shop-clientsite.vercel.app',
+        'https://openrouter.ai/api/v1/chat/completions',
+        'deepseek/deepseek-r1-distill-qwen-32b:free'
+    ], credentials: true }));
 app.use((0, cookie_parser_1.default)());
-// ✅ Increase request payload limit to fix "request entity too large" error
 app.use(express_1.default.json({ limit: "50mb" }));
 app.use(express_1.default.urlencoded({ extended: true, limit: "50mb" }));
 // ----- API Endpoints --------

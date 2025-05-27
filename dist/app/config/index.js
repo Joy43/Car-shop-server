@@ -9,6 +9,8 @@ dotenv_1.default.config({ path: path_1.default.join((process.constrainedMemory()
 exports.default = {
     port: process.env.Port,
     database_url: process.env.DATABASE_URL,
+    gemini_api_key: process.env.GEMINI_API_KEY,
+    openai_api_key: process.env.OPENAI_API_KEY,
     bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
     NODE_ENV: process.env.NODE_ENV,
     jwt_access_secret: process.env.JWT_ACCESS_SECRET,

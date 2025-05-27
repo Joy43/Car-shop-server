@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Car = void 0;
 const mongoose_1 = require("mongoose");
 const carStoreSchema = new mongoose_1.Schema({
     brand: {
@@ -45,9 +46,21 @@ const carStoreSchema = new mongoose_1.Schema({
         type: Boolean,
         required: [true, "Please specify if the product is in stock."],
     },
+    averageRating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+    },
+    ratingCount: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
 }, {
     timestamps: true,
 });
 // Export the model for access another component
-const Car = (0, mongoose_1.model)("Car", carStoreSchema);
-exports.default = Car;
+// const Car = model<Tcars>("Car", carStoreSchema);
+// export default Car;
+exports.Car = (0, mongoose_1.model)("Car", carStoreSchema);

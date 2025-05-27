@@ -8,13 +8,12 @@ import { ReviewValidation } from './review.validation';
 const router = Router();
 
 router.get(
-    '/',
-    auth(USER_ROLE.admin),ReviewControllers.getAllReviews
+    '/',ReviewControllers.getAllReviews
   
 );
 router.post(
     '/',
-    auth(USER_ROLE.user),
+    auth(USER_ROLE.user,USER_ROLE.admin),
     validateRequest(ReviewValidation.createReviewValidationSchema),ReviewControllers.createReview
 );
 

@@ -1,4 +1,5 @@
-import Car from "./cars.model";
+import { Car } from "./cars.model";
+
 
 
 
