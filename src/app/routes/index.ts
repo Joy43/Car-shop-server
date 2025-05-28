@@ -8,6 +8,8 @@ import { ReviewRoutes } from "../modeules/review/review.routes";
 import { MessageRoute } from "../modeules/chat/chat.routes";
 import { chatbotRoute } from "../modeules/chatbot/chatbot.routes";
 import { Wishlistrouter } from "../modeules/wishlist/wishlist.routes";
+import { contractRoute } from "../modeules/contract/contract.routes";
+import { subscribeRoute } from "../modeules/subscribe/subscribe.routes";
 
 
 
@@ -49,6 +51,14 @@ const moduleRoutes= [
     {
         path:'/wishlist',
         route:Wishlistrouter,
+    },
+    {
+        path:'/contract',
+        route:contractRoute,
+    },
+    {
+        path:'/subscribe',
+        route:subscribeRoute,
     },
     
 
