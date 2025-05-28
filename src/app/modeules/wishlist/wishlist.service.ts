@@ -56,22 +56,63 @@ const CreateWishlist = async (
   };
 };
 
+// ---------------get wishlist--------------
+const GetWishlistByUser = async (authUser: JwtPayload) => {
+  const userId = authUser?.userId || authUser?.user;
 
-const GetWishlistByUser = async (userEmail: string) => {
-  const user = await User.findOne({ email: userEmail });
+  console.log("Debug: Extracted userId =", userId);
+
+  if (!userId || !mongoose.Types.ObjectId.isValid(String(userId))) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Valid user ID is required.");
+  }
+
+  const user = await User.findById(String(userId));
   if (!user) {
     throw new AppError(StatusCodes.BAD_REQUEST, "User not found");
   }
 
-  const wishlist = await Wishlist.find({ user: user._id }).populate("car");
+  const wishlistResult = await Wishlist.find({ user: user._id }).populate("car");
+
+  return wishlistResult;
+};
+
+const GetAllWishlists = async () => {
+  const allWishlists = await Wishlist.find({})
+    .populate("user")
+    .populate("car");
+
+  return allWishlists;
+};
+
+const DeleteWishlist = async (wishlistId: string, authUser: JwtPayload) => {
+  if (!wishlistId || !mongoose.Types.ObjectId.isValid(wishlistId)) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Valid wishlist ID is required.");
+  }
+
+  const wishlist = await Wishlist.findById(wishlistId);
+
+  if (!wishlist) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Wishlist item not found.");
+  }
+
+  // Ensure user is authorized to delete
+  const userId = authUser?.userId || authUser?.user;
+  if (String(wishlist.user) !== String(userId)) {
+    throw new AppError(StatusCodes.FORBIDDEN, "You are not authorized to delete this wishlist.");
+  }
+
+  await Wishlist.findByIdAndDelete(wishlistId);
 
   return {
     success: true,
-    wishlist,
+    message: "Wishlist item deleted successfully",
   };
 };
+
 
 export const WishListService = {
   CreateWishlist,
   GetWishlistByUser,
+  GetAllWishlists,
+  DeleteWishlist
 };

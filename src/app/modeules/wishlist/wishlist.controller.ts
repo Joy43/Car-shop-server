@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { WishListService } from "./wishlist.service";
 import catchAsync from "../utils/catchAsync";
 import { JwtPayload } from "jsonwebtoken";
+import sendResponse from "../utils/sendRequest";
+import status from "http-status";
 
 const createWishlist = catchAsync(async (req: Request, res: Response) => {
   const authUser = req.user as JwtPayload; 
@@ -9,13 +11,44 @@ const createWishlist = catchAsync(async (req: Request, res: Response) => {
   res.status(200).json(result);
 });
 
-
+// -------------get wishlist
  const getWishlist = catchAsync(async (req: Request, res: Response) => {
-  const { email } = req.user as { email: string }; 
-  const result = await WishListService.GetWishlistByUser(email);
-  res.status(200).json(result);
+  const authUser = req.user as JwtPayload;
+  const result = await WishListService.GetWishlistByUser(authUser);
+  sendResponse(res,{
+    success:true,
+    message:"getwishlist is sucessfully user wise",
+    statusCode:status.OK,
+    data:result
+  })
 });
+
+
+const getAllWishlist = catchAsync(async (req: Request, res: Response) => {
+  const result = await WishListService.GetAllWishlists();
+  sendResponse(res, {
+    success: true,
+    message: "All wishlists retrieved successfully",
+    statusCode: status.OK,
+    data: result,
+  });
+});
+
+// ---------delete-----------
+const DeleteWishlist = async (req: Request, res: Response,next:NextFunction) => {
+  try {
+    const { id } = req.params;
+    const result = await WishListService.DeleteWishlist(id, req.user as JwtPayload);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const WishListController={
 createWishlist,
-getWishlist
+getWishlist,
+getAllWishlist,
+DeleteWishlist
 }

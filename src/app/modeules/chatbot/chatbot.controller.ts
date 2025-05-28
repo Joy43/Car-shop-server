@@ -10,11 +10,23 @@ const askGemini = async (req: Request, res: Response): Promise<void> => {
     res.status(400).json({ error: "Prompt is required" });
     return;
   }
-    const result = await ChatbotService.askGemini(prompt);
+    const result = await ChatbotService.CreateaskGemini(prompt);
     sendResponse(res,{
          statusCode: status.OK,
               success: true,
               message: 'promt create sucessfully successfully',
+              data: result,
+    })
+};
+
+// -------------get gemenini-----------
+const GetaskGemini = async (req: Request, res: Response) => {
+  
+    const result = await ChatbotService.GetaskGemini();
+    sendResponse(res,{
+         statusCode: status.OK,
+              success: true,
+              message: 'retrive sucessfully sucessfully successfully',
               data: result,
     })
    
@@ -22,4 +34,5 @@ const askGemini = async (req: Request, res: Response): Promise<void> => {
 
 export const ChatbotController = {
   askGemini,
-};
+  GetaskGemini
+}

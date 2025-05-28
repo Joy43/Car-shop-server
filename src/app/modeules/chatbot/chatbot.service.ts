@@ -1,16 +1,29 @@
+import { GoogleGenerativeAI } from "@google/generative-ai"; 
 import config from "../../config";
 
-const askGemini = async (prompt: string): Promise<string> => {
-  const { GoogleGenAI } = await import("@google/genai");
-  const ai = new GoogleGenAI({ apiKey: config.gemini_api_key });
-  const result = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: prompt,
-  });
+if (!config.gemini_api_key) {
+  throw new Error("Gemini API key is missing in config.");
+}
+const genAI = new GoogleGenerativeAI(config.gemini_api_key);
 
-  return result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+const CreateaskGemini = async (prompt: string): Promise<string> => {
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); 
+  const result = await model.generateContent(prompt); 
+  const response = result.response;
+  const text = response.text();
+
+  return text;
 };
 
+const GetaskGemini = async (): Promise<string> => {
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const result = await model.generateContent("Say hello from Gemini AI!");
+  const response = result.response;
+  const text =  response.text();
+
+  return text;
+};
 export const ChatbotService = {
-  askGemini,
+  CreateaskGemini ,
+  GetaskGemini
 };

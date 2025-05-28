@@ -6,5 +6,6 @@ import { ChatbotController } from "./chatbot.controller";
 const router = Router();
 
 router.post("/",ChatbotController.askGemini );
+router.get("/",ChatbotController.GetaskGemini);
 
 export const chatbotRoute= router;

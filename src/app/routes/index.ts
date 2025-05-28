@@ -51,7 +51,7 @@ const moduleRoutes= [
         route:Wishlistrouter,
     },
     
-    
+
 
 ]
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
