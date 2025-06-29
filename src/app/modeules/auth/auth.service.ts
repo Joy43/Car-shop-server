@@ -1,6 +1,5 @@
 import { TUser } from "../user/user.interface";
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import User from "../user/user.model";
 import AppError from "../error/AppError";
 import httpStatus from 'http-status';
@@ -48,6 +47,7 @@ const login = async (payload: TLoginUser) => {
         role: user.role,
         name: user.name,
         email: user.email,
+        image:user.image,
         user:user._id.toString()
     };
 
@@ -93,6 +93,7 @@ const refreshTokens = async (token: string) => {
           role: user.role,
           name: user.name,
           email: user.email,
+          image:user.image,
           user:user._id.toString()
         };
 

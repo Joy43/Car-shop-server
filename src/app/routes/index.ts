@@ -10,6 +10,7 @@ import { chatbotRoute } from "../modeules/chatbot/chatbot.routes";
 import { Wishlistrouter } from "../modeules/wishlist/wishlist.routes";
 import { contractRoute } from "../modeules/contract/contract.routes";
 import { subscribeRoute } from "../modeules/subscribe/subscribe.routes";
+import { blogsRoute } from "../modeules/blog/blog.routes";
 
 
 
@@ -59,6 +60,10 @@ const moduleRoutes= [
     {
         path:'/subscribe',
         route:subscribeRoute,
+    },
+    {
+        path:'/carblog',
+        route:blogsRoute,
     },
     
 
