@@ -7,7 +7,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 dotenv_1.default.config({ path: path_1.default.join((process.constrainedMemory(), '.env')) });
 exports.default = {
-    port: process.env.Port,
+    PORT: process.env.PORT || 5000,
     database_url: process.env.DATABASE_URL,
     gemini_api_key: process.env.GEMINI_API_KEY,
     openai_api_key: process.env.OPENAI_API_KEY,
@@ -20,6 +20,8 @@ exports.default = {
     cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
     cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
+    emailSender: process.env.SENDER_EMAIL,
+    sender_pass: process.env.SENDER_APP_PASS,
     sp: {
         sp_endpoint: process.env.SP_ENDPOINT,
         sp_username: process.env.SP_USERNAME,

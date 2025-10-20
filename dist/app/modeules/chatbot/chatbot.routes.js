@@ -5,4 +5,6 @@ const express_1 = require("express");
 const chatbot_controller_1 = require("./chatbot.controller");
 const router = (0, express_1.Router)();
 router.post("/", chatbot_controller_1.ChatbotController.askGemini);
+router.get("/", chatbot_controller_1.ChatbotController.GetaskGemini);
+// router.post("/image", ChatbotController.createImageFromPrompt);
 exports.chatbotRoute = router;

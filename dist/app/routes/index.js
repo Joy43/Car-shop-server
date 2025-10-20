@@ -9,6 +9,10 @@ const order_routes_1 = require("../modeules/order/order.routes");
 const review_routes_1 = require("../modeules/review/review.routes");
 const chat_routes_1 = require("../modeules/chat/chat.routes");
 const chatbot_routes_1 = require("../modeules/chatbot/chatbot.routes");
+const wishlist_routes_1 = require("../modeules/wishlist/wishlist.routes");
+const contract_routes_1 = require("../modeules/contract/contract.routes");
+const subscribe_routes_1 = require("../modeules/subscribe/subscribe.routes");
+const blog_routes_1 = require("../modeules/blog/blog.routes");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     {
@@ -42,6 +46,22 @@ const moduleRoutes = [
     {
         path: '/chatbot',
         route: chatbot_routes_1.chatbotRoute,
+    },
+    {
+        path: '/wishlist',
+        route: wishlist_routes_1.Wishlistrouter,
+    },
+    {
+        path: '/contract',
+        route: contract_routes_1.contractRoute,
+    },
+    {
+        path: '/subscribe',
+        route: subscribe_routes_1.subscribeRoute,
+    },
+    {
+        path: '/carblog',
+        route: blog_routes_1.blogsRoute,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

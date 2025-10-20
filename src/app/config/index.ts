@@ -4,7 +4,7 @@ import path from 'path';
 dotenv.config({path:path.join((process.constrainedMemory(),'.env'))})
 
 export default{
-    port:process.env.Port,
+    PORT: process.env.PORT || 5000,
     database_url:process.env.DATABASE_URL,
     gemini_api_key:process.env.GEMINI_API_KEY,
     openai_api_key: process.env.OPENAI_API_KEY,

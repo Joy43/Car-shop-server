@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  server:
+    container_name: carhop_backend
+    image: carhop_backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    command: sh -c "npm start"
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:6
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: carshop
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

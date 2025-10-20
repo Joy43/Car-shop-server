@@ -1,0 +1,66 @@
+ssh -i "car_server.pem" ubuntu@ec2-13-51-85-83.eu-north-1.compute.amazonaws.com
+# Update packages
+sudo apt update && sudo apt upgrade -y
+
+# Install Docker
+sudo apt install -y docker.io
+
+# Enable and start Docker
+sudo systemctl enable docker
+sudo systemctl start docker
+
+# Install Docker Compose
+sudo apt install -y docker-compose-plugin
+
+# Check versions
+docker --version
+docker compose version
+
+
+
+
+PORT=3000
+DATABASE_URL=mongodb://mongodb:27017/carshop
+
+#DATABASE_URL=mongodb+srv://nextLevel:oZyr7X9bgxSS2Vwx@cluster0.wdgjn.mongodb.net/carshop?retryWrites=true&w=majority&appName=Cluster0
+#DATABASE_URL=mongodb://localhost:27017/carshop
+
+NODE_ENV=development
+BCRYPT_SALT_ROUNDS=8
+# JWT Secrets and Expiry
+JWT_ACCESS_SECRET=04d5a2b7a5d19a4fe03fcfbf27a794b2d2fe4b3116c86829929811a7c3298a611823ef877715b0a1e32516f0572b4c92349a8521b60b82ee1191cca9935655e0
+JWT_ACCESS_EXPIRES_IN=1y
+JWT_REFRESH_SECRET=a3ff075f68f38a3fe91c9a326a06d40ba1e93bded94a944c32c38d3ddcccca48cf88505ae2301f021a992d713b3a3a12896c4956bbc4397718370228a503ff4d
+JWT_REFRESH_EXPIRES_IN=1y
+JWT_OTP_SECRET=6891d177ee3f2bd58cf2a5e8ea7ac1c0e5255c12b35b792ad1d4b269f79ce7e3f4509f82a925a722345cd077641371e68295b8c7eef36e74f58edf95f83b7de5
+JWT_PASS_RESET_SECRET=1100ef2f5e0d2dffbd2b51f28dbfe4bd18653fbb90dbe81434bae2c0089e9bb0e4897bcf37fe61384da9a206847be2d8933a4fb786d76bbc91e09054769aa23a
+JWT_PASS_RESET_EXPIRES_IN=60d
+NODE_ENV=development
+
+CLOUDINARY_CLOUD_NAME=dyosy3vte
+CLOUDINARY_API_KEY=678853297276789
+CLOUDINARY_API_SECRET=yCoTLMDXXaMtPtt5tVRWVisZJ4Q
+# Email Configuration
+SENDER_EMAIL=jackjoyislam@gmail.com
+SENDER_APP_PASS=pgcg hrew mfso oohw
+
+# SSLCommerz Payment Info
+STORE_NAME=testcodingvca
+PAYMENT_API=https://sandbox.sslcommerz.com/gwprocess/v3/api.php
+VALIDATION_API=https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
+STORE_ID=odin66cf482aa81d2
+STORE_PASSWORD=codin66cf482aa81d2@ssl
+VALIDATION_URL=http://localhost:3000/api/v1/ssl/validate
+SUCCESS_URL=http://localhost:3000/success
+FAILED_URL=http://localhost:3000/failed
+CANCEL_URL=http://localhost:3000/sucess
+
+
+# ------------shurjopay-----------------
+SP_ENDPOINT=https://sandbox.shurjopayment.com
+SP_USERNAME=sp_sandbox
+SP_PASSWORD=pyyk97hu&6u6
+SP_PREFIX=SP
+SP_RETURN_URL=https://car-shop-clientsite.vercel.app/order/verification
+# -------------API------------
+GEMINI_API_KEY=AIzaSyADCWy5frLiRA2mLPb5J1HkM40e-QBjOLA

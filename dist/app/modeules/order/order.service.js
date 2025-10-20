@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -12,8 +21,9 @@ const order_utils_1 = require("./order.utils");
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const order_constant_1 = require("./order.constant");
 const cars_model_1 = require("../cars/cars.model");
-const createOrder = async (userEmail, payload, client_ip) => {
-    const user = await user_model_1.default.findOne({ email: userEmail });
+const createOrder = (userEmail, payload, client_ip) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const user = yield user_model_1.default.findOne({ email: userEmail });
     if (!user) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User is not available");
     }
@@ -24,7 +34,7 @@ const createOrder = async (userEmail, payload, client_ip) => {
             message: "Missing required user information (address, phone, or city)",
         };
     }
-    if (!payload?.products?.length) {
+    if (!((_a = payload === null || payload === void 0 ? void 0 : payload.products) === null || _a === void 0 ? void 0 : _a.length)) {
         return {
             error: true,
             statusCode: http_status_codes_1.StatusCodes.BAD_REQUEST,
@@ -41,7 +51,7 @@ const createOrder = async (userEmail, payload, client_ip) => {
                 message: "Product ID or quantity is missing",
             };
         }
-        const car = await cars_model_1.Car.findById(productId);
+        const car = yield cars_model_1.Car.findById(productId);
         if (!car) {
             return {
                 error: true,
@@ -58,7 +68,7 @@ const createOrder = async (userEmail, payload, client_ip) => {
                     : "Insufficient stock available",
             };
         }
-        const updatedCar = await cars_model_1.Car.findOneAndUpdate({ _id: productId }, [
+        const updatedCar = yield cars_model_1.Car.findOneAndUpdate({ _id: productId }, [
             {
                 $set: {
                     quantity: { $subtract: ["$quantity", quantity] },
@@ -88,7 +98,7 @@ const createOrder = async (userEmail, payload, client_ip) => {
         products: payload.products,
         totalPrice,
     };
-    let order = await order_model_1.Order.create({
+    let order = yield order_model_1.Order.create({
         products: orderDetails.products,
         user,
         totalPrice,
@@ -104,16 +114,16 @@ const createOrder = async (userEmail, payload, client_ip) => {
         amount: totalPrice,
         order_id: order._id,
         currency: "BDT",
-        customer_name: user?.name,
-        customer_address: user?.address,
-        customer_email: user?.email,
-        customer_phone: user?.phone,
-        customer_city: user?.city,
+        customer_name: user === null || user === void 0 ? void 0 : user.name,
+        customer_address: user === null || user === void 0 ? void 0 : user.address,
+        customer_email: user === null || user === void 0 ? void 0 : user.email,
+        customer_phone: user === null || user === void 0 ? void 0 : user.phone,
+        customer_city: user === null || user === void 0 ? void 0 : user.city,
         client_ip,
     };
-    const payment = await order_utils_1.orderUtils.makePaymentAsync(shurjopayPayload);
-    if (payment?.transactionStatus) {
-        await order.updateOne({
+    const payment = yield order_utils_1.orderUtils.makePaymentAsync(shurjopayPayload);
+    if (payment === null || payment === void 0 ? void 0 : payment.transactionStatus) {
+        yield order.updateOne({
             transaction: {
                 id: payment.sp_order_id,
                 transactionStatus: payment.transactionStatus,
@@ -121,12 +131,12 @@ const createOrder = async (userEmail, payload, client_ip) => {
         });
     }
     return payment.checkout_url;
-};
+});
 // ------------order varify service------------------
-const verifyPayment = async (order_id) => {
-    const verifiedPayment = await order_utils_1.orderUtils.verifyPaymentAsync(order_id);
+const verifyPayment = (order_id) => __awaiter(void 0, void 0, void 0, function* () {
+    const verifiedPayment = yield order_utils_1.orderUtils.verifyPaymentAsync(order_id);
     if (verifiedPayment.length) {
-        await order_model_1.Order.findOneAndUpdate({
+        yield order_model_1.Order.findOneAndUpdate({
             'transaction.id': order_id,
         }, {
             'transaction.bank_status': verifiedPayment[0].bank_status,
@@ -145,39 +155,39 @@ const verifyPayment = async (order_id) => {
         });
     }
     return verifiedPayment;
-};
+});
 // ----------get all-order-------------
-const getAllOrders = async (query) => {
+const getAllOrders = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const orderQuery = new QueryBuilder_1.default(order_model_1.Order.find().populate('user'), query)
         .search(order_constant_1.orderSearchableFields)
         .filter()
         .sort()
         .paginate()
         .fields();
-    const meta = await orderQuery.countTotal();
-    const result = await orderQuery.modelQuery;
+    const meta = yield orderQuery.countTotal();
+    const result = yield orderQuery.modelQuery;
     return { meta, result };
-};
+});
 // --------signle order------------------
-const getSingleOrder = async (id) => {
-    const order = await order_model_1.Order.findById(id).populate('user');
+const getSingleOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const order = yield order_model_1.Order.findById(id).populate('user');
     if (!order) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Order not found");
     }
     return order;
-};
+});
 // --------------update order---------------
-const updateOrder = async (id, payload) => {
-    const result = await order_model_1.Order.findByIdAndUpdate({ _id: id }, payload, {
+const updateOrder = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.Order.findByIdAndUpdate({ _id: id }, payload, {
         unique: true,
     });
     return result;
-};
+});
 // --delete order------------------
-const deleteOrder = async (id) => {
-    const result = await order_model_1.Order.findByIdAndDelete(id);
+const deleteOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.Order.findByIdAndDelete(id);
     return result;
-};
+});
 exports.orderService = {
     createOrder,
     verifyPayment,
