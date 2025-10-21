@@ -1,20 +1,20 @@
-name: CI/CD Docker Deploy
+name: CI/CD Docker Deploy (No Docker Hub)
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
-      - uses: actions/checkout@v3
+      # 1. Checkout repository (for lint/build validation on CI)
+      - uses: actions/checkout@v5
 
       # 2. Set up Node.js
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
           node-version: 18
 
@@ -24,33 +24,23 @@ jobs:
       # 4. Run linter (optional)
       - run: npm run lint
 
-      # 5. Run build
+      # 5. Run build (validate build succeeds)
       - run: npm run build
 
-      # 6. Log in to Docker Hub (set secrets DOCKER_USERNAME & DOCKER_PASSWORD)
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # 7. Build and push Docker image
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/carshop-server:latest
-
-      # 8. Deploy (example: Docker on remote server via SSH)
+      # 6. Deploy (build and run directly on server via SSH)
       - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.9
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/carshop-server:latest
+            cd ~/car-shop-backend/Car-shop-server
+            git pull origin main
+            npm install
+            npm run lint || true  # Optional, skip if lint fails
+            npm run build
+            docker build -t carshop-server .
             docker stop carshop-server || true
             docker rm carshop-server || true
-            docker run -d --name carshop-server -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/carshop-server:latest
+            docker run -d --name carshop-server -p 5000:5000 carshop-server
