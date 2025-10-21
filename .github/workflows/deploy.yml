@@ -38,7 +38,6 @@ jobs:
             cd ~/car-shop-backend/Car-shop-server
             git pull origin main
             npm install
-            npm run lint || true  # Optional, skip if lint fails
             npm run build
             docker build -t carshop-server .
             docker stop carshop-server || true
