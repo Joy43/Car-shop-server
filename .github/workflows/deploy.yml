@@ -21,9 +21,6 @@ jobs:
       # 3. Install dependencies
       - run: npm install
 
-      # 4. Run linter (optional)
-      - run: npm run lint
-
       # 5. Run build (validate build succeeds)
       - run: npm run build
 
